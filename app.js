@@ -5,11 +5,15 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const {engine} = require('express-handlebars')
 const mongoose = require('mongoose')
+// configure sessions
+const session = require('express-session');
+
+var app = express();
+
+app.use(session({ secret: 'secret-unique-code', cookie: { maxAge: 3600000 }, resave: true, saveUninitialized: true }));
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
-var app = express();
 
 // view engine setup
 app.engine('handlebars', engine());
@@ -20,7 +24,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
 
 // MongoDb Connection
 const URI = 'mongodb://127.0.0.1:27017/redditclone'

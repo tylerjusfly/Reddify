@@ -6,7 +6,9 @@ const User = require('../models/users')
 router.get('/', async(req, res, next) => {
   try{
     const users = await User.find();
-    return res.render('users/index', {allUsers : users})
+  
+    let list_of_users = users.map(user => user.username)
+    res.render('users/index', {allUsers : list_of_users} )
     
     }
   catch(err){
@@ -22,7 +24,7 @@ router.get('/new', (req, res, next) => {
 
 
 router.post('/', (req, res, next) => {
-  const user = new User(req.body)
+  const user = User(req.body)
 
   user.save()
   .then(user => {
