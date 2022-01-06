@@ -8,18 +8,22 @@ exports.loginController = {
     User.findOne({username})
     .then(user => {
       // if user record does not exist
-      if(!user){
-        res.status(404).send("user does not exist")
-      }
-      const isValidPass = bcrypt.compareSync(password, user.password)
+      if(user){
 
-      // Checking if user password is correct
-      if(!isValidPass){
-        res.status(401).send("password is not correct")
+        const isValidPass = bcrypt.compareSync(password, user.password)
+        if(isValidPass){
+
+          req.session.userId = user._id
+          req.session.username = user.username
+          return res.redirect('/')
+         
+        }else{
+          res.render('error', {message : "password is not correct"})
+        }
+      }else{
+        res.render('error', {message : "user does not exist"})
       }
-      // res.status(200).send("you are logged in")
-      req.session.userId = user._id
-      return res.redirect('/')
+
     })
 
 

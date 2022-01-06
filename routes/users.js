@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../models/users')
+const {authUser} = require('./helpers/auth')
 
 /* GET users listing. */
-router.get('/', async(req, res, next) => {
+router.get('/', authUser.requireLogin,  async(req, res, next) => {
   try{
     const users = await User.find();
   
